@@ -1,0 +1,32 @@
+name: Semgrep SAST Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  sast:
+    name: Static Application Security Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run Semgrep Security Scan
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            -w /src \
+            semgrep/semgrep \
+            semgrep scan --config auto --error

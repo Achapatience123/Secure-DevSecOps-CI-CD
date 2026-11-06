@@ -1,0 +1,4 @@
+scan:
+  detection-priority: comprehensive
+  file-patterns:
+    - 'pip:requirements-.*\.txt'

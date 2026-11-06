@@ -28,6 +28,7 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
+          trivy-config: trivy.yaml
           scanners: vuln
           vuln-type: library
           severity: HIGH,CRITICAL

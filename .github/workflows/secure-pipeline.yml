@@ -19,7 +19,7 @@ jobs:
     name: Gitleaks Secret Scan
     uses: ./.github/workflows/gitleaks.yml
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   semgrep:
     name: Semgrep SAST

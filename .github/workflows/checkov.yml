@@ -33,4 +33,4 @@ jobs:
 
       - name: Run Checkov Terraform Scan
         run: |
-          checkov -d terraform --framework terraform --soft-fail
+          checkov -d terraform --framework terraform

@@ -1,0 +1,92 @@
+name: Secure DevSecOps CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+
+jobs:
+  ci:
+    name: Application Tests
+    uses: ./.github/workflows/ci.yml
+
+  gitleaks:
+    name: Gitleaks Secret Scan
+    uses: ./.github/workflows/gitleaks.yml
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  semgrep:
+    name: Semgrep SAST
+    uses: ./.github/workflows/semgrep.yml
+
+  trivy-dependencies:
+    name: Trivy Dependency Scan
+    uses: ./.github/workflows/trivy.yml
+
+  trivy-image:
+    name: Trivy Container Image Scan
+    uses: ./.github/workflows/trivy-image.yml
+
+  checkov:
+    name: Checkov Infrastructure Scan
+    uses: ./.github/workflows/checkov.yml
+
+  publish:
+    name: Publish Approved Image to Amazon ECR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    needs:
+      - ci
+      - gitleaks
+      - semgrep
+      - trivy-dependencies
+      - trivy-image
+      - checkov
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Configure AWS Credentials Through OIDC
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Verify AWS Identity
+        run: aws sts get-caller-identity
+
+      - name: Authenticate Docker to Amazon ECR
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+
+          aws ecr get-login-password --region "$AWS_REGION" \
+            | docker login --username AWS --password-stdin "$ECR_REGISTRY"
+
+      - name: Build and Push Docker Image
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+          IMAGE_URI="${ECR_REGISTRY}/secure-devsecops-api:${GITHUB_SHA}"
+
+          docker build -t "$IMAGE_URI" .
+          docker push "$IMAGE_URI"
+
+          echo "Published image: $IMAGE_URI"

@@ -43,7 +43,7 @@ resource "aws_ecr_repository" "application" {
   }
 
   encryption_configuration {
-    encryption_type = "AES256"
+    encryption_type = "KMS"
   }
 }
 

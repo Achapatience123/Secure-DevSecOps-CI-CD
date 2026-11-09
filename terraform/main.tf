@@ -27,7 +27,7 @@ resource "aws_iam_role" "github_actions_ecr_push" {
       Condition = {
         StringEquals = {
           "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          "token.actions.githubusercontent.com:sub" = "repo:${var.github_repository}:ref:refs/heads/${var.github_branch}"
+          "token.actions.githubusercontent.com:sub" = "repo:Achapatience123@233324563/Secure-DevSecOps-CI-CD@1447025521:ref:refs/heads/main"
         }
       }
     }]

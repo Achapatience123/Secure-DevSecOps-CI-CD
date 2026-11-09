@@ -570,26 +570,81 @@ Terraform state files and other sensitive local configuration must remain outsid
 
 ## 12. Evidence and Screenshots
 
-Implementation and validation evidence is maintained in the `screenshots/` directory.
+The following screenshots capture the implementation and validation of the major project components. They provide visual evidence of the application, security controls, infrastructure provisioning and successful image publishing.
 
-The screenshots document the major project milestones.
+### 12.1 Docker and Application Validation
 
-| Evidence | What It Demonstrates |
-|---|---|
-| Docker image build | Successful container image creation. |
-| Docker API validation | Application endpoints responding correctly. |
-| Non-root verification | Application running without root privileges. |
-| GitHub Actions CI | Successful automated test execution. |
-| Gitleaks | Successful secret scanning. |
-| Semgrep | Successful static analysis. |
-| Trivy dependency scan | Dependency vulnerability validation. |
-| Trivy container scan | Container image vulnerability reporting. |
-| Checkov initial scan | Initial infrastructure security assessment. |
-| Checkov passing scan | Successful Terraform security validation. |
-| Checkov security gate | Validation of the infrastructure security gate. |
-| Terraform deployment | Successful AWS infrastructure provisioning. |
-| ECR publishing | Successful image publishing. |
-| ECR repository verification | Published image visible in the repository. |
+**Docker image build**
+
+![Docker image build](screenshots/01-docker-image-build-success.jpg)
+
+**Application API validation**
+
+![Docker container API validation](screenshots/02-docker-container-api-validation.jpg)
+
+**Non-root container execution**
+
+![Docker non-root verification](screenshots/03-docker-non-root-verification.jpg)
+
+### 12.2 CI/CD and Security Scanning
+
+**GitHub Actions CI — automated tests**
+
+![GitHub Actions CI success](screenshots/04-github-actions-ci-success.png)
+
+**Gitleaks — secret detection**
+
+![Gitleaks secret scan](screenshots/05-gitleaks-secret-scan-success.jpg)
+
+**Semgrep — static application security testing**
+
+![Semgrep SAST scan](screenshots/06-semgrep-sast-scan-success.jpg)
+
+**Trivy — dependency scanning**
+
+![Trivy dependency scan](screenshots/07-trivy-dependency-scan-clean.jpg)
+
+**Trivy — dependency security gate**
+
+![Trivy security gate](screenshots/08-trivy-github-actions-security-gate-success.jpg)
+
+**Trivy — full dependency scan**
+
+![Trivy full dependency scan](screenshots/09-trivy-full-dependency-scan-success.jpg.jpeg)
+
+**Trivy — container image build**
+
+![Trivy container image build](screenshots/10-trivy-container-image-build-success.jpg.jpeg)
+
+**Trivy — container image scan results**
+
+![Trivy container image scan results](screenshots/11-trivy-container-image-scan-results.jpg.jpeg)
+
+**Checkov — initial Terraform security assessment**
+
+![Checkov initial Terraform scan](screenshots/12-checkov-initial-terraform-scan.png.jpeg)
+
+**Checkov — passing Terraform security scan**
+
+![Checkov passing Terraform scan](screenshots/13-checkov-passing-terraform-security-scan.png.jpeg)
+
+**Checkov — security gate validation**
+
+![Checkov blocking security gate](screenshots/14-checkov-blocking-security-gate-passed.png.jpeg)
+
+### 12.3 AWS Infrastructure and ECR Publishing
+
+**Terraform — AWS infrastructure provisioning**
+
+![Terraform AWS infrastructure provisioned](screenshots/15-terraform-aws-infrastructure-provisioned.png.jpeg)
+
+**Amazon ECR — image successfully published**
+
+![ECR image published successfully](screenshots/16-ecr-image-published-successfully.png.jpeg)
+
+**Amazon ECR — published image visible in repository**
+
+![ECR image visible in repository](screenshots/17-ecr-image-visible-in-repository.png.jpeg)
 
 ---
 

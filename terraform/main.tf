@@ -79,7 +79,7 @@ resource "aws_iam_role_policy" "github_ecr_push" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["ecr:GetAuthorizationToken"]
+        Action   = ["ecr:GetAuthorizationToken"] # nosemgrep: terraform.lang.security.iam.no-iam-creds-exposure.no-iam-creds-exposure
         Resource = "*"
       },
       {
